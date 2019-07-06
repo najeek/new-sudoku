@@ -1,26 +1,54 @@
-/*    [ [5, 3, 4, 6, 7, 8, 9, 0, 0],
-	    [6, 7, 2, 1, 9, 5, 3, 4, 8],
-	    [1, 9, 8, 3, 4, 2, 5, 6, 7],
-	    [8, 5, 9, 7, 6, 1, 4, 2, 3],
-	    [4, 2, 6, 8, 5, 3, 7, 9, 1],
-	    [7, 1, 3, 9, 2, 4, 8, 5, 6],
-	    [9, 6, 1, 5, 3, 7, 2, 8, 4],
-	    [2, 8, 7, 4, 1, 9, 6, 3, 5],
-	    [3, 4, 5, 2, 8, 6, 1, 7, 9]
-	  ]
-*/  
 module.exports = function solveSudoku(matrix) {
+    for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
 
+            if (!matrix[row][col]) {
+                for (var k = 1; k <= 9; k++) {
+                    if (addNum(matrix, row, col, k)) {
+                        matrix[row][col] = k;
 
+                        if (solveSudoku(matrix)) {
+                            return matrix;
+                        }
 
+                        matrix[row][col] = 0;
+                    }
+                }
 
+                return false;
+            }
+        }
+    }
 
+    return matrix;
+};
 
+function addNum(matrix, i, j, k) {
 
+    var a, b;
 
+    for (a = 0; a <= 8; a++) {
+        if (a !== i && matrix[a][j] === k) {
+            return false;
+        }
+    }
 
+    for (a = 0; a <= 8; a++) {
+        if (a !== j && matrix[i][a] === k) {
+            return false;
+        }
+    }
 
+    var y = Math.floor(i / 3) * 3,
+        x = Math.floor(j / 3) * 3;
 
+    for (a = 0; a < 3; a++) {
+        for (b = 0; b < 3; b++) {
+            if (a !== i && b !== j && matrix[y + a][x + b] === k) {
+                return false;
+            }
+        }
+    }
 
-
+    return true;
 }
